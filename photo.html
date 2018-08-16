@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>htmltopic</title>
+	<!-- <script type="text/javascript" src="/h5/js/jquery-1.11.0.min.js"></script> -->
+	<!-- <script type="text/javascript" src="js/html2canvas.min.js"></script> -->
+	<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+	<style>
+		* {
+			margin: 0;
+		}
+		/* html{
+			background: #fff;
+		} */
+		.top {
+			width: 335px;
+			background-color: #fff;
+			min-height: 56px;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+		}
+		.number {
+			position: relative;
+			width: 44px;
+			display: inline-block;
+			min-height: 56px;
+			text-align: center;
+			background: #424242;
+			color: #fff;
+			font-weight: bold;
+			font-family: PingFangSC-Regular, sans-serif;
+		}
+		.number span {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 36px;
+		}
+		.right {
+			width: 291px;
+			box-sizing: border-box;
+			padding: 10px 0 10px 10px;
+			min-height: 56px;
+			display: flex;
+			flex-direction: column;
+			background: #F6F6F6;
+		}
+
+		.right .title {
+			font-size: 16px;
+			color: #333;
+			font-family: PingFangSC-Regular, sans-serif;
+		}
+
+		.right .author {
+			box-sizing: border-box;
+			font-size: 12px;
+			color: #999;
+			font-family: PingFangSC-Regular, sans-serif;
+		}
+
+		canvas {
+			margin-right: 5px;
+		}
+		/* .down {
+			float: left;
+			margin: 40px 10px;
+		}
+		.down2 {
+			float: left;
+			margin: 40px 30px;
+		} */
+		.button{
+			display: flex;
+			flex-direction: row;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="top">
+		<div class="number" id="number_color">
+			<span id="number">1</span>
+		</div>
+		<div class="right" id="right_color">
+			<div class="title" id="title">灵感还是抄袭？蔡司指控Samyang复制他们的镜头设计</div>
+			<div class="author">来自: <span id="author">蔡司电影镜头</span></div>
+		</div>
+	</div>
+
+	<input type="text" placeholder="请输入编号" id="number_input">
+	<button id="number_click">添加序号</button>
+	<input type="text" placeholder="请输入标题" id="title_input">
+	<button id="title_click">添加标题</button>
+	<input type="text" placeholder="请输入作者" id="author_input">
+	<button id="author_click">添加作者</button>
+	<input type="text" placeholder="更改序号背景色(RGB)" id="number_color_input">
+	<button id="number_color_click">更改序号背景色</button>
+	<input type="text" placeholder="更改标题背景色(RGB)" id="number_right_input">
+	<button id="number_right_click">更改标题背景色</button>
+	<!-- <div>
+		<a class="down2" href="" download="downImg">下载2</a>
+	</div> -->
+	<div class="button">
+		<button id="shengcheng">生成图片</button>
+		<a class="down" href="" download="downImg">下载</a>
+	</div>
+	<script>
+		var number = document.getElementById('number')
+		var title = document.getElementById('title')
+		var author = document.getElementById('author')
+
+		var right_color = document.getElementById('right_color')
+		var number_color = document.getElementById('number_color')
+
+		var number_input = document.getElementById('number_input')
+		var title_input = document.getElementById('title_input')
+		var author_input = document.getElementById('author_input')
+
+		var number_click = document.getElementById('number_click')
+		var title_click = document.getElementById('title_click')
+		var author_click = document.getElementById('author_click')
+		
+		var shengcheng = document.getElementById('shengcheng')
+
+		var number_color_input = document.getElementById('number_color_input')
+		var number_color_click = document.getElementById('number_color_click')
+		var number_right_input = document.getElementById('number_right_input')
+		var number_right_click = document.getElementById('number_right_click')
+
+		number_click.onclick = function () {
+			number.innerHTML = number_input.value
+		}
+		title_click.onclick = function () {
+			title.innerHTML = title_input.value
+		}
+		author_click.onclick = function () {
+			author.innerHTML = author_input.value
+		}
+		number_color_click.onclick = function () {
+			number_color.style.background = number_color_input.value
+		}
+		number_right_click.onclick = function () {
+			right_color.style.background = number_right_input.value
+		}
+		shengcheng.onclick = function () {
+			//直接选择要截图的dom，就能截图，但是因为canvas的原因，生成的图片模糊
+			//html2canvas(document.querySelector('div')).then(function(canvas) {
+			//    document.body.appendChild(canvas);
+			//});
+			//创建一个新的canvas
+			var canvas2 = document.createElement("canvas");
+			let _canvas = document.querySelector('.top');
+			var w = parseInt(window.getComputedStyle(_canvas).width);
+			var h = parseInt(window.getComputedStyle(_canvas).height);
+			//将canvas画布放大若干倍，然后盛放在较小的容器内，就显得不模糊了
+			// var oH=document.body.offsetHeight;
+			// var oDiv=document.getElementsByClassName('test')[0];
+			// oDiv.style.height=oH+'px';
+			canvas2.width = w * 2;
+			canvas2.height = h * 2;
+			canvas2.style.width = w + "px";
+			canvas2.style.height = h + "px";
+			canvas2.style.background = "#fff";
+			//可以按照自己的需求，对context的参数修改,translate指的是偏移量
+			//  var context = canvas.getContext("2d");
+			//  context.translate(0,0);
+			var context = canvas2.getContext("2d");
+			context.scale(2, 2);
+			html2canvas(document.querySelector('.top'), { canvas: canvas2 }).then(function (canvas) {
+				//document.body.appendChild(canvas);
+				//canvas转换成url，然后利用a标签的download属性，直接下载，绕过上传服务器再下载
+				document.querySelector(".down").setAttribute('href', canvas.toDataURL());
+			});
+			console.log(canvas2.width)
+		}
+	</script>
+
+
+	<script language="javascript">
+    //这是另一种写法
+    // $(function () {
+    //     $(".down2").click(function () {
+    //         html2canvas($(".test")).then(function (canvas) {
+    //             var imgUri = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url
+    //             window.location.href = imgUri; // 下载图片
+    //         });
+
+
+            //html2canvas($('.tongxingzheng_bg'), {
+            //    onrendered: function (canvas) {
+            //        var data = canvas.toDataURL("image/png");//生成的格式
+            //        //data就是生成的base64码啦
+            //        alert(data);
+            //    }
+            //});
+        // });
+    // });
+	</script>
+</body>
+
+</html>
